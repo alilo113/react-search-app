@@ -21,20 +21,22 @@ function App() {
           }
         );
         const data = await res.json();
-        setSearchResults(data);
+        // Ensure data is an array before setting it
+        setSearchResults(Array.isArray(data) ? data : []);
       } catch (error) {
         setError(error);
       }
       setIsLoading(false);
-    }
+    };
+    
     if (searchTerm.length > 0) {
       fetchData();
     }
-  }, [searchTerm])
+  }, [searchTerm]);
 
   return (
     <div>
-    <h1>Title Goes Here</h1>
+      <h1>Title Goes Here</h1>
       <form>
         <label htmlFor="search">Search for a Nepo Baby:</label>
         <input
@@ -48,13 +50,18 @@ function App() {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        searchResults.map(result => (
-          <div key={result.id}>
-            <h1>{result.name}</h1>
-            <p>{result.max_height}</p>
-            <p>Nepo Baby Net worth from 2023: {result.net_worth}</p>
-          </div>
-        ))
+        // Check if searchResults is an array before mapping over it
+        searchResults.length > 0 ? (
+          searchResults.map(result => (
+            <div key={result.id}>
+              <h1>{result.name}</h1>
+              <p>{result.max_height}</p>
+              <p>Nepo Baby Net worth from 2023: {result.net_worth}</p>
+            </div>
+          ))
+        ) : (
+          <div>No results found</div>
+        )
       )}
     </div>
   );
